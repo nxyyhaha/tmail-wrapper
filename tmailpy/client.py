@@ -75,5 +75,5 @@ class TMail:
 
     def clean_messages(self, email: str):
         """Fetch messages for `email` and return cleaned versions."""
-        raw = self.messages(email)
+        raw = self.raw_messages(email)
         return [self.clean_message(m) for m in raw]

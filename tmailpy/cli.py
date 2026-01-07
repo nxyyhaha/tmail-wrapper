@@ -28,7 +28,7 @@ def main(argv=None):
     elif args.cmd == "create":
         print(client.create(args.email))
     elif args.cmd == "messages":
-        print(client.messages(args.email))
+        print(client.clean_messages(args.email))
     elif args.cmd == "delete":
         print(client.delete_message(args.msg_id))
     else:
