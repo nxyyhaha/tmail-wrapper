@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "tmailpy"
-version = "0.0.2.1"
+version = "0.0.2.2"
 description = "Python wrapper for TMail API"
 readme = "README.md"
 requires-python = ">=3.8"
@@ -15,7 +15,7 @@ authors = [ { name = "nxyyhaha" } ]
 license = { file = "LICENSE" }
 
 [project.scripts]
-tmail-cli = "tmail_api.cli:main"
+tmailpy = "tmailpy.cli:main"
 
 [project.urls]
 Homepage = "https://github.com/nxyyhaha/tmail-wrapper"

@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
 	name='tmailpy',
-	version='0.0.2.1',
+	version='0.0.2.2',
 	description='Python wrapper for TMail API',
 	packages=find_packages(exclude=("tests",)),
 	install_requires=[
@@ -12,7 +12,7 @@ setup(
     url='https://github.com/nxyyhaha/tmail-wrapper',
 	entry_points={
 		'console_scripts': [
-			'tmail-cli=tmailpy.cli:main'
+			'tmailpy=tmailpy.cli:main'
 		]
 	},
 )
