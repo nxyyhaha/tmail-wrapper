@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-	name='tmail-py',
+	name='tmailpy',
 	version='0.0.2',
 	description='Python wrapper for TMail API',
 	packages=find_packages(exclude=("tests",)),

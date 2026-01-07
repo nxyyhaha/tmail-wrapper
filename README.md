@@ -6,7 +6,7 @@ that mirrors the original Node package API.
 Quick example
 
 ```py
-from tmail-py import TMail
+from tmailpy import TMail
 
 client = TMail('https://default.tmail.thehp.in/api', 'API_KEY')
 print(client.domains())
@@ -17,5 +17,5 @@ print(client.messages('email@domain.com'))
 CLI
 
 ```
-python -m tmail_api.cli https://default.tmail.thehp.in/api API_KEY domains
+python -m tmailpy.cli https://default.tmail.thehp.in/api API_KEY domains
 ```
