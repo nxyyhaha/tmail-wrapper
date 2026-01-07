@@ -9,6 +9,7 @@ setup(
 		'requests>=2.28'
 	],
 	include_package_data=True,
+    url='https://github.com/nxyyhaha/tmail-wrapper',
 	entry_points={
 		'console_scripts': [
 			'tmail-cli=tmail_api.cli:main'
