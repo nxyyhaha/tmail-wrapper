@@ -18,6 +18,6 @@ license = { file = "LICENSE" }
 tmail-cli = "tmail_api.cli:main"
 
 [project.urls]
-source = "https://github.com/nxyyhaha/tmail-wrapper"
+Homepage = "https://github.com/nxyyhaha/tmail-wrapper"
 issues = "https://github.com/nxyyhaha/tmail-wrapper/issues"
 contribute = "https://github.com/nxyyhaha/tmail-wrapper/pulls"
