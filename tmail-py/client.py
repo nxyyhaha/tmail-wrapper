@@ -32,7 +32,7 @@ class TMail:
         resp.raise_for_status()
         return resp.json()
 
-    def messages(self, email: str):
+    def raw_messages(self, email: str):
         """Get messages for `email`."""
         email_q = quote_plus(email)
         resp = requests.get(f"{self.base}/messages/{email_q}/{self.key}")
@@ -73,7 +73,7 @@ class TMail:
             'content': self._clean_html(msg.get('content', ''))
         }
 
-    def fetch_and_clean_messages(self, email: str):
+    def clean_messages(self, email: str):
         """Fetch messages for `email` and return cleaned versions."""
         raw = self.messages(email)
         return [self.clean_message(m) for m in raw]
