@@ -60,8 +60,17 @@ class TMail:
         text = re.sub(r'\s+', ' ', text).strip()
         return text
 
+    def _extract_links(self, html_content: str) -> list:
+        """Extract links from HTML content."""
+        if not html_content:
+            return []
+        # find all links, including those with other attributes
+        links = re.findall(r'<a\s+(?:[^>]*?\s+)?href="([^"]*)"', html_content, re.I)
+        return links
+
     def clean_message(self, msg: dict) -> dict:
         """Return a cleaned, normalized message dict from raw API message."""
+        html_content = msg.get('content', '')
         return {
             'id': msg.get('id'),
             'subject': msg.get('subject'),
@@ -70,7 +79,8 @@ class TMail:
             'date': msg.get('date'),
             'age': msg.get('datediff'),
             'attachments': msg.get('attachments', []),
-            'content': self._clean_html(msg.get('content', ''))
+            'content': self._clean_html(html_content),
+            'links': self._extract_links(html_content)
         }
 
     def clean_messages(self, email: str):

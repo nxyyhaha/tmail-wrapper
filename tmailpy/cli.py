@@ -31,6 +31,10 @@ def main(argv=None):
         print(client.clean_messages(args.email))
     elif args.cmd == "delete":
         print(client.delete_message(args.msg_id))
+    elif args.cmd == "raw_messages":
+        print(client.raw_messages(args.email))
+    elif args.cmd is None:
+        p.print_help()
     else:
         p.print_help()
 
