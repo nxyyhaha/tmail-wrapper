@@ -71,9 +71,12 @@ class TMail:
     def clean_message(self, msg: dict) -> dict:
         """Return a cleaned, normalized message dict from raw API message."""
         html_content = msg.get('content', '')
-        return {
+        subject = msg.get('subject', '')
+        sender_name = msg.get('sender_name', '').lower()
+
+        cleaned_msg = {
             'id': msg.get('id'),
-            'subject': msg.get('subject'),
+            'subject': subject,
             'sender_name': msg.get('sender_name'),
             'sender_email': msg.get('sender_email'),
             'date': msg.get('date'),
@@ -82,6 +85,18 @@ class TMail:
             'content': self._clean_html(html_content),
             'links': self._extract_links(html_content)
         }
+
+        is_discord_verification = (
+            sender_name == 'discord' or
+            ('discord' in html_content.lower() and subject == 'Verify Email Address for Discord')
+        )
+
+        if is_discord_verification:
+            match = re.search(r'<a[^>]*href="([^"]*)"[^>]*>\s*Verify Email\s*</a>', html_content, re.I)
+            if match:
+                cleaned_msg['verification_link'] = match.group(1)
+
+        return cleaned_msg
 
     def clean_messages(self, email: str):
         """Fetch messages for `email` and return cleaned versions."""
