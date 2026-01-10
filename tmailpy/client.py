@@ -9,7 +9,7 @@ This mirrors the JavaScript `tmail.js` API from the original project:
 It is a tiny, synchronous wrapper around `requests`.
 """
 from urllib.parse import quote_plus
-import requests
+import aiohttp
 import re
 from html import unescape
 
@@ -18,30 +18,31 @@ class TMail:
     def __init__(self, base: str, key: str):
         self.base = base.rstrip('/')
         self.key = key
+        self.session = aiohttp.ClientSession()
 
     def domains(self):
         """Fetch available domains."""
-        resp = requests.get(f"{self.base}/domains/{self.key}")
+        resp = self.session.get(f"{self.base}/domains/{self.key}")
         resp.raise_for_status()
         return resp.json()
 
     def create(self, email: str = ''):
         """Create a random or custom email. If `email` is empty, creates random."""
         email_q = quote_plus(email)
-        resp = requests.get(f"{self.base}/email/{email_q}/{self.key}")
+        resp = self.session.get(f"{self.base}/email/{email_q}/{self.key}")
         resp.raise_for_status()
         return resp.json()
 
     def raw_messages(self, email: str):
         """Get messages for `email`."""
         email_q = quote_plus(email)
-        resp = requests.get(f"{self.base}/messages/{email_q}/{self.key}")
+        resp = self.session.get(f"{self.base}/messages/{email_q}/{self.key}")
         resp.raise_for_status()
         return resp.json()
 
     def delete_message(self, msg_id):
         """Delete a message by id."""
-        resp = requests.delete(f"{self.base}/message/{msg_id}/{self.key}")
+        resp = self.session.delete(f"{self.base}/message/{msg_id}/{self.key}")
         resp.raise_for_status()
         return resp.json()
 
@@ -83,18 +84,27 @@ class TMail:
             'age': msg.get('datediff'),
             'attachments': msg.get('attachments', []),
             'content': self._clean_html(html_content),
-            'links': self._extract_links(html_content)
+            #'links': self._extract_links(html_content)
+            'discord': {}
         }
 
         is_discord_verification = (
-            sender_name == 'discord' or
-            ('discord' in html_content.lower() and subject == 'Verify Email Address for Discord')
+            sender_name == 'discord' and subject == 'Verify Email Address for Discord'
+        )
+
+        is_discord_password_reset = (
+            sender_name == 'discord' and subject == 'Password Reset Request for Discord'
         )
 
         if is_discord_verification:
             match = re.search(r'<a[^>]*href="([^"]*)"[^>]*>\s*Verify Email\s*</a>', html_content, re.I)
             if match:
-                cleaned_msg['verification_link'] = match.group(1)
+                cleaned_msg['discord']['verification_link'] = match.group(1)
+
+        if is_discord_password_reset:
+            match = re.search(r'<a[^>]*href="([^"]*)"[^>]*>\s*Reset Password\s*</a>', html_content, re.I)
+            if match:
+                cleaned_msg['discord']['password_reset_link'] = match.group(1)
 
         return cleaned_msg
 

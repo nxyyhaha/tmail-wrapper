@@ -4,21 +4,37 @@ from .client import TMail
 
 
 def main(argv=None):
-    p = argparse.ArgumentParser(prog="tmail-cli")
+    p = argparse.ArgumentParser(
+        prog="tmailpy", description="A command-line interface for the TMail API."
+    )
     p.add_argument("base", help="Base URL of TMail API (e.g. https://.../api)")
-    p.add_argument("key", help="API key")
-    sub = p.add_subparsers(dest="cmd")
+    p.add_argument("key", help="Your TMail API key")
+    sub = p.add_subparsers(dest="cmd", help="Available commands")
 
-    sub.add_parser("domains")
+    sub.add_parser("domains", help="List available domains.")
 
-    c_create = sub.add_parser("create")
-    c_create.add_argument("email", nargs="?", default="")
+    c_create = sub.add_parser("create", help="Create a new temporary email address.")
+    c_create.add_argument(
+        "email",
+        nargs="?",
+        default="",
+        help="Optional: specify a username for the email address.",
+    )
 
-    c_messages = sub.add_parser("messages")
-    c_messages.add_argument("email")
+    c_messages = sub.add_parser(
+        "messages", help="List messages for a specific email address."
+    )
+    c_messages.add_argument("email", help="The email address to fetch messages for.")
 
-    c_delete = sub.add_parser("delete")
-    c_delete.add_argument("msg_id")
+    c_delete = sub.add_parser("delete", help="Delete a specific message.")
+    c_delete.add_argument("msg_id", help="The ID of the message to delete.")
+
+    c_raw_messages = sub.add_parser(
+        "raw_messages", help="List raw messages for a specific email address."
+    )
+    c_raw_messages.add_argument(
+        "email", help="The email address to fetch raw messages for."
+    )
 
     args = p.parse_args(argv)
     client = TMail(args.base, args.key)
