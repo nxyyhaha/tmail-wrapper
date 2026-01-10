@@ -9,7 +9,7 @@ This mirrors the JavaScript `tmail.js` API from the original project:
 It is a tiny, synchronous wrapper around `requests`.
 """
 from urllib.parse import quote_plus
-import aiohttp
+import requests
 import re
 from html import unescape
 
@@ -18,7 +18,7 @@ class TMail:
     def __init__(self, base: str, key: str):
         self.base = base.rstrip('/')
         self.key = key
-        self.session = aiohttp.ClientSession()
+        self.session = requests.Session()
 
     def domains(self):
         """Fetch available domains."""
